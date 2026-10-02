@@ -1,0 +1,182 @@
+// Service Marketplace - Database Schema
+// Bro's idea: reverse-bidding marketplace for plumber/carpenter/electrician/mechanic/mason/welder
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  WORKER
+  ADMIN
+}
+
+enum ServiceCategory {
+  PLUMBER
+  CARPENTER
+  ELECTRICIAN
+  MECHANIC
+  MASON
+  WELDER
+  ELECTRONICS
+  WEB_DEV
+  FOOD_DELIVERY
+  PARCEL_DELIVERY
+}
+
+enum KycStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum JobStatus {
+  OPEN        // waiting for bids
+  BIDDING     // bids coming in
+  ASSIGNED    // customer picked a worker
+  IN_PROGRESS // worker checked in (face verified)
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+enum BidStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+model User {
+  id            String   @id @default(uuid())
+  role          Role
+  name          String
+  mobile        String   @unique
+  mobileVerified Boolean @default(false)
+  email         String?  @unique
+  passwordHash  String?
+  address       String?
+  latitude      Float?
+  longitude     Float?
+  profilePhotoUrl String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workerProfile WorkerProfile?
+  jobsPosted    Job[]           @relation("CustomerJobs")
+  bids          Bid[]
+  otpCodes      OtpCode[]
+  reviewsGiven  Review[]        @relation("ReviewsGiven")
+  reviewsReceived Review[]      @relation("ReviewsReceived")
+}
+
+model WorkerProfile {
+  id             String          @id @default(uuid())
+  userId         String          @unique
+  user           User            @relation(fields: [userId], references: [id])
+  category       ServiceCategory
+  experienceYears Int
+  age            Int?
+  aadhaarNumber  String?         // store encrypted at app layer, never expose raw
+  aadhaarDocUrl  String?
+  aadhaarMobileMatch Boolean     @default(false) // true once Aadhaar-linked mobile is confirmed == registered mobile
+  kycStatus      KycStatus       @default(PENDING)
+  ratingAvg      Float           @default(0)
+  ratingCount    Int             @default(0)
+  walletBalance  Float           @default(0)
+  isAvailable    Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+
+  bids           Bid[]
+}
+
+model Job {
+  id           String    @id @default(uuid())
+  customerId   String
+  customer     User      @relation("CustomerJobs", fields: [customerId], references: [id])
+  category     ServiceCategory
+  description  String
+  photoUrl     String?
+  address      String
+  latitude     Float?
+  longitude    Float?
+  status       JobStatus @default(OPEN)
+  acceptedBidId String?  @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  bids         Bid[]
+  transaction  Transaction?
+  review       Review?
+  checkIn      JobCheckIn?
+}
+
+model Bid {
+  id              String    @id @default(uuid())
+  jobId           String
+  job             Job       @relation(fields: [jobId], references: [id])
+  workerId        String
+  worker          WorkerProfile @relation(fields: [workerId], references: [id])
+  userId          String    // for direct relation to User (notifications etc)
+  user            User      @relation(fields: [userId], references: [id])
+  amount          Float
+  etaMinutes      Int
+  status          BidStatus @default(PENDING)
+  createdAt       DateTime  @default(now())
+}
+
+// Face-match check-in when worker arrives at job site
+model JobCheckIn {
+  id            String   @id @default(uuid())
+  jobId         String   @unique
+  job           Job      @relation(fields: [jobId], references: [id])
+  liveSelfieUrl String
+  matchScore    Float?   // similarity score from face-match service
+  matched       Boolean  @default(false)
+  checkedInAt   DateTime @default(now())
+}
+
+model Transaction {
+  id             String   @id @default(uuid())
+  jobId          String   @unique
+  job            Job      @relation(fields: [jobId], references: [id])
+  amount         Float
+  commissionPct  Float    @default(5.0)
+  commissionAmt  Float
+  workerPayout   Float
+  status         String   @default("PENDING") // PENDING, PAID
+  createdAt      DateTime @default(now())
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  jobId      String   @unique
+  job        Job      @relation(fields: [jobId], references: [id])
+  fromUserId String
+  fromUser   User     @relation("ReviewsGiven", fields: [fromUserId], references: [id])
+  toUserId   String
+  toUser     User     @relation("ReviewsReceived", fields: [toUserId], references: [id])
+  rating     Int      // 1-5
+  comment    String?
+  createdAt  DateTime @default(now())
+}
+
+model OtpCode {
+  id        String   @id @default(uuid())
+  userId    String?
+  mobile    String
+  codeHash  String   // hashed OTP, never store plain
+  purpose   String   // REGISTER, LOGIN, JOB_CHECKIN
+  expiresAt DateTime
+  consumed  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([mobile, purpose])
+}

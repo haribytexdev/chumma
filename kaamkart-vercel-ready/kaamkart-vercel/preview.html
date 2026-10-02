@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KaamKart — Preview</title>
+<style>
+  :root {
+    --steel: #10192B;
+    --steel-soft: #1B2740;
+    --paper: #F7F6F3;
+    --card: #FFFFFF;
+    --safety: #E8A317;
+    --safety-soft: #FCEBC5;
+    --rust: #C1562E;
+    --ink: #171B1F;
+    --ink-2: rgba(23,27,31,0.62);
+    --ink-3: rgba(23,27,31,0.42);
+    --line: rgba(23,27,31,0.09);
+    --verified: #2E8B57;
+    --verified-soft: #E4F3EB;
+    --pending: #A9862F;
+    --pending-soft: #FBF1DD;
+    --rejected: #C24A3B;
+    --rejected-soft: #FBEAE7;
+    --radius: 14px;
+    --shadow-sm: 0 1px 2px rgba(16,25,43,0.06), 0 1px 1px rgba(16,25,43,0.04);
+    --shadow-md: 0 8px 24px rgba(16,25,43,0.10), 0 2px 6px rgba(16,25,43,0.06);
+    --shadow-lg: 0 20px 48px rgba(16,25,43,0.16);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  p { margin: 0; }
+  a { text-decoration: none; }
+  ::-webkit-scrollbar { height: 6px; width: 6px; }
+  ::-webkit-scrollbar-thumb { background: rgba(16,25,43,0.18); border-radius: 9999px; }
+
+  /* ===== Layout ===== */
+  .container { max-width: 1040px; margin: 0 auto; padding: 0 28px; }
+  .container-sm { max-width: 640px; margin: 0 auto; padding: 0 28px; }
+  .container-md { max-width: 760px; margin: 0 auto; padding: 0 28px; }
+  .section { padding: 72px 0; }
+  .flex { display: flex; }
+  .flex-between { display: flex; align-items: center; justify-content: space-between; }
+  .flex-wrap { flex-wrap: wrap; }
+  .items-center { align-items: center; }
+  .items-start { align-items: flex-start; }
+  .items-end { align-items: flex-end; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .gap-4 { gap: 16px; }
+  .gap-6 { gap: 26px; }
+  .mt-1 { margin-top: 4px; }
+  .mt-2 { margin-top: 8px; }
+  .mt-3 { margin-top: 12px; }
+  .mt-4 { margin-top: 18px; }
+  .mt-6 { margin-top: 26px; }
+  .mt-8 { margin-top: 36px; }
+  .mb-2 { margin-bottom: 8px; }
+  .mb-3 { margin-bottom: 12px; }
+  .mb-4 { margin-bottom: 18px; }
+  .mb-6 { margin-bottom: 26px; }
+  .mb-8 { margin-bottom: 36px; }
+  .text-right { text-align: right; }
+  .text-center { text-align: center; }
+  .grid { display: grid; gap: 18px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .space-y-4 > * + * { margin-top: 16px; }
+  .space-y-5 > * + * { margin-top: 20px; }
+  .flex-1 { flex: 1; }
+
+  /* ===== Nav ===== */
+  .navbar {
+    background: var(--steel);
+    padding: 18px 28px;
+  }
+  .navbar .inner { display: flex; align-items: center; justify-content: space-between; max-width: 1040px; margin: 0 auto; }
+  .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: white; display: inline-flex; align-items: center; gap: 8px; }
+  .logo .mark { width: 26px; height: 26px; background: var(--safety); border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; color: var(--steel); font-weight: 900; }
+  .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+  .nav-link { color: rgba(255,255,255,0.72); cursor: pointer; transition: color .15s ease; font-weight: 500; }
+  .nav-link:hover { color: white; }
+
+  /* ===== Hero ===== */
+  .hero {
+    background: var(--steel);
+    color: white;
+    padding: 88px 28px 96px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute; width: 520px; height: 520px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,163,23,0.22) 0%, rgba(232,163,23,0) 70%);
+    top: -160px; right: -120px; pointer-events: none;
+  }
+  .hero-inner { max-width: 680px; margin: 0 auto; position: relative; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.02em;
+    color: var(--safety); margin-bottom: 20px;
+    background: rgba(232,163,23,0.12); padding: 6px 14px; border-radius: 999px;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--safety); }
+  .hero h1 { font-size: 54px; line-height: 1.06; margin-bottom: 22px; }
+  .hero p.lead { color: rgba(255,255,255,0.68); max-width: 540px; margin-bottom: 34px; font-size: 17px; line-height: 1.65; }
+  .stats-row { display: flex; gap: 40px; margin-top: 52px; font-size: 14px; color: rgba(255,255,255,0.5); }
+  .stats-row .stat-num { color: white; font-size: 26px; font-weight: 800; display: block; letter-spacing: -0.02em; }
+
+  /* ===== Buttons ===== */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14.5px;
+    padding: 13px 26px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    transition: transform .14s ease, box-shadow .14s ease, filter .14s ease, background .15s ease, color .15s ease;
+  }
+  .btn-primary {
+    background: var(--safety);
+    color: var(--steel);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 8px 20px rgba(232,163,23,0.28);
+  }
+  .btn-primary:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 10px 24px rgba(232,163,23,0.36); }
+  .btn-outline {
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    color: white;
+  }
+  .btn-outline:hover { background: white; color: var(--steel); border-color: white; }
+  .btn-outline-dark {
+    background: transparent;
+    border: 1.5px solid var(--line);
+    color: var(--ink);
+  }
+  .btn-outline-dark:hover { background: var(--steel); color: white; border-color: var(--steel); }
+  .btn-outline-danger {
+    background: var(--rejected-soft);
+    border: 1.5px solid transparent;
+    color: var(--rejected);
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+  .btn-outline-danger:hover { background: var(--rejected); color: white; }
+  .btn-small { padding: 10px 20px; font-size: 13.5px; }
+  .btn-xs { padding: 9px 18px; font-size: 12.5px; border-radius: 8px; }
+  .btn-block { display: flex; width: 100%; padding: 15px; }
+
+  /* ===== Card (signature element, refined) ===== */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--line);
+    padding: 22px;
+    transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+  }
+  .card.hoverable:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+    border-color: rgba(232,163,23,0.35);
+  }
+  .card-pad-sm { padding: 12px; }
+
+  /* ===== Category tile ===== */
+  .category-tile {
+    text-align: center;
+    padding: 26px 10px;
+    cursor: pointer;
+  }
+  .category-tile .icon-wrap {
+    width: 46px; height: 46px; margin: 0 auto 12px;
+    border-radius: 12px;
+    background: var(--safety-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 21px;
+    transition: all .18s ease;
+  }
+  .category-tile:hover .icon-wrap { transform: scale(1.08) rotate(-4deg); }
+  .category-tile.selected { border-color: var(--steel); background: var(--steel); }
+  .category-tile.selected .icon-wrap { background: rgba(255,255,255,0.15); }
+  .category-tile.selected p { color: white; }
+  .category-tile p { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+
+  /* ===== Category pill ===== */
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 13px;
+    border-radius: 999px;
+    background: var(--safety-soft);
+    color: #8A5D0C;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* ===== Stamp badge ===== */
+  .stamp {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .stamp-verified { color: var(--verified); background: var(--verified-soft); }
+  .stamp-pending { color: var(--pending); background: var(--pending-soft); }
+  .stamp-rejected { color: var(--rejected); background: var(--rejected-soft); }
+
+  /* ===== Form fields ===== */
+  label.field-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-2);
+    margin-bottom: 6px;
+  }
+  .input-field {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    font-family: inherit;
+    font-size: 14.5px;
+    color: var(--ink);
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .input-field::placeholder { color: var(--ink-3); }
+  .input-field:focus {
+    outline: none;
+    border-color: var(--safety);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(232,163,23,0.14);
+  }
+  .input-otp { letter-spacing: 0.4em; text-align: center; font-weight: 700; }
+  textarea.input-field { resize: vertical; }
+
+  /* ===== Progress ===== */
+  .progress-row { display: flex; align-items: center; gap: 6px; margin-bottom: 36px; }
+  .progress-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line); flex-shrink: 0; }
+  .progress-dot.done { background: var(--verified); }
+  .progress-dot.current { background: var(--safety); box-shadow: 0 0 0 4px rgba(232,163,23,0.2); }
+  .progress-line { flex: 1; height: 2px; background: var(--line); border-radius: 2px; }
+  .progress-line.done { background: var(--verified); }
+
+  /* ===== Text utility ===== */
+  .text-muted { color: var(--ink-2); }
+  .text-muted-2 { color: var(--ink-3); }
+  .text-body { color: rgba(23,27,31,0.75); }
+  .text-verified { color: var(--verified); }
+  .text-pending { color: var(--pending); }
+  .text-rejected { color: var(--rejected); }
+  .text-steel { color: var(--steel); }
+  .text-rust { color: var(--rust); }
+  .text-xs { font-size: 12.5px; }
+  .text-sm { font-size: 14px; }
+  .font-semibold { font-weight: 700; }
+  .amount { font-size: 24px; font-weight: 800; color: var(--steel); letter-spacing: -0.02em; }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 9px;
+    background: var(--steel); color: white; font-weight: 800; font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  /* ===== Tab nav (preview only) ===== */
+  .tabbar {
+    background: white;
+    border-bottom: 1px solid var(--line);
+    padding: 14px 28px;
+    display: flex;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    color: var(--ink-2);
+    background: white;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s ease;
+  }
+  .tab-btn:hover { border-color: var(--safety); color: var(--ink); }
+  .tab-btn.active { background: var(--steel); color: white; border-color: var(--steel); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn .35s ease both; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== Verify box ===== */
+  .verify-box {
+    padding: 14px;
+    background: var(--verified-soft);
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .verify-box .check {
+    width: 20px; height: 20px; border-radius: 50%; background: var(--verified);
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* ===== Stat card ===== */
+  .stat-card p:first-child { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+  .stat-card p:last-child { font-size: 30px; font-weight: 800; margin-top: 6px; letter-spacing: -0.02em; }
+
+  /* ===== Avatar ===== */
+  .avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--steel), var(--steel-soft));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 15px; flex-shrink: 0;
+  }
+
+  @media (max-width: 680px) {
+    .hero h1 { font-size: 36px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .nav-links.desktop-only { display: none; }
+    .stats-row { flex-wrap: wrap; gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Preview tab switcher (mockup navigation only, not part of the real app) -->
+  <div class="tabbar">
+    <button class="tab-btn active" onclick="showTab('landing', this)">Landing</button>
+    <button class="tab-btn" onclick="showTab('register', this)">Worker Registration</button>
+    <button class="tab-btn" onclick="showTab('customer', this)">Customer Dashboard</button>
+    <button class="tab-btn" onclick="showTab('quotes', this)">Quote Sheet</button>
+    <button class="tab-btn" onclick="showTab('worker', this)">Worker Board</button>
+    <button class="tab-btn" onclick="showTab('admin', this)">Admin</button>
+  </div>
+
+  <!-- ============ LANDING ============ -->
+  <div id="landing" class="tab-panel active">
+    <nav class="navbar">
+      <div class="inner">
+        <span class="logo"><span class="mark">K</span>KaamKart</span>
+        <div class="nav-links desktop-only">
+          <span class="nav-link">How it works</span>
+          <span class="nav-link">Trades</span>
+          <span class="nav-link">Log in</span>
+          <span class="btn btn-primary btn-small">Get started</span>
+        </div>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-glow"></div>
+      <div class="hero-inner">
+        <span class="eyebrow"><span class="dot"></span>Now live across Chennai &amp; Trichy</span>
+        <h1>Post the job.<br/>Let the quotes come to you.</h1>
+        <p class="lead">Snap a photo of the problem, and verified professionals near you — from plumbers to software developers — bid for the job. You compare and pick. No middleman, no guesswork.</p>
+        <div class="flex flex-wrap gap-4">
+          <span class="btn btn-primary">Post a job</span>
+          <span class="btn btn-outline">Register as a worker</span>
+        </div>
+        <div class="stats-row">
+          <div><span class="stat-num">2,400+</span>Verified workers</div>
+          <div><span class="stat-num">9</span>Trade categories</div>
+          <div><span class="stat-num">5%</span>Platform commission</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="text-center mb-8" style="max-width:520px; margin-left:auto; margin-right:auto;">
+        <h2 style="font-size:28px;">Every trade, one app</h2>
+        <p class="text-muted text-sm mt-2">From a leaking pipe to a broken website — post it once, get bids from people who actually do that work.</p>
+      </div>
+      <div class="grid grid-3" style="margin-bottom:64px;">
+        <div class="card category-tile hoverable"><div class="icon-wrap">🔧</div><p>Plumbing</p></div>
+        <div class="card category-tile hoverable"><div class="icon-wrap">⚡</div><p>Electrical</p></div>
+        <div class="card category-tile hoverable"><div class="icon-wrap">🪚</div><p>Carpentry</p></div>
+        <div class="card category-tile hoverable"><div class="icon-wrap">🏗️</div><p>Civil Work</p></div>
+        <div class="card category-tile hoverable"><div class="icon-wrap">🔩</div><p>Mechanic</p></div>
+        <div class="card category-tile hoverable"><div class="icon-wrap">📺</div><p>Electronics</p></div>
+        <div class="card category-tile hoverable"><div class="icon-wrap">💻</div><p>Web Dev</p></div>
+        <div class="card category-tile hoverable"><div class="icon-wrap">🍱</div><p>Food Delivery</p></div>
+        <div class="card category-tile hoverable"><div class="icon-wrap">📦</div><p>Parcel Delivery</p></div>
+      </div>
+
+      <div class="text-center mb-8">
+        <h2 style="font-size:28px;">How it works</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card hoverable">
+          <div class="step-num">1</div>
+          <h3 style="font-size:18px; margin-bottom:8px;">Post the problem</h3>
+          <p class="text-sm text-body">Photo, description, and your address. Takes under a minute.</p>
+        </div>
+        <div class="card hoverable">
+          <div class="step-num">2</div>
+          <h3 style="font-size:18px; margin-bottom:8px;">Compare quotes</h3>
+          <p class="text-sm text-body">Verified workers bid with price and arrival time. You choose.</p>
+        </div>
+        <div class="card hoverable">
+          <div class="step-num">3</div>
+          <h3 style="font-size:18px; margin-bottom:8px;">Verified on arrival</h3>
+          <p class="text-sm text-body">OTP and a face-match check-in confirm it's the right person.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ WORKER REGISTRATION ============ -->
+  <div id="register" class="tab-panel">
+    <nav class="navbar">
+      <div class="inner"><span class="logo"><span class="mark">K</span>KaamKart</span></div>
+    </nav>
+    <div class="container-sm" style="padding-top:60px; padding-bottom:60px;">
+      <p class="text-xs font-semibold text-rust" style="text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">Worker sign-up</p>
+      <h1 style="font-size:30px; margin-bottom:10px;">Register your trade</h1>
+      <p class="text-muted text-sm mb-8">Every field here feeds the verification badge customers see — the more complete, the more trust.</p>
+
+      <div class="progress-row">
+        <div class="progress-dot done"></div><div class="progress-line done"></div>
+        <div class="progress-dot current"></div><div class="progress-line"></div>
+        <div class="progress-dot"></div><div class="progress-line"></div>
+        <div class="progress-dot"></div>
+      </div>
+
+      <div class="card space-y-5">
+        <div class="grid grid-2">
+          <div>
+            <label class="field-label">Full name</label>
+            <input class="input-field" placeholder="Manoj Pillai" />
+          </div>
+          <div>
+            <label class="field-label">Work experience</label>
+            <input class="input-field" placeholder="4 years" />
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label">Mobile number</label>
+          <div class="flex gap-2">
+            <input class="input-field" placeholder="9876543210" />
+            <span class="btn btn-outline-dark btn-xs" style="white-space:nowrap;">Send OTP</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label">OTP</label>
+          <input class="input-field input-otp" placeholder="000000" />
+          <p class="text-xs text-verified mt-2 font-semibold">✓ Mobile number verified</p>
+        </div>
+
+        <div>
+          <label class="field-label">Trade category</label>
+          <div class="grid" style="grid-template-columns:repeat(5,1fr); gap:8px;">
+            <div class="card card-pad-sm category-tile selected" style="padding:12px 4px;"><div class="icon-wrap" style="width:32px;height:32px;font-size:15px;margin-bottom:6px;">🔧</div><p style="font-size:10px;">Plumbing</p></div>
+            <div class="card card-pad-sm category-tile" style="padding:12px 4px;"><div class="icon-wrap" style="width:32px;height:32px;font-size:15px;margin-bottom:6px;">⚡</div><p style="font-size:10px;">Electrical</p></div>
+            <div class="card card-pad-sm category-tile" style="padding:12px 4px;"><div class="icon-wrap" style="width:32px;height:32px;font-size:15px;margin-bottom:6px;">🪚</div><p style="font-size:10px;">Carpentry</p></div>
+            <div class="card card-pad-sm category-tile" style="padding:12px 4px;"><div class="icon-wrap" style="width:32px;height:32px;font-size:15px;margin-bottom:6px;">💻</div><p style="font-size:10px;">Web Dev</p></div>
+            <div class="card card-pad-sm category-tile" style="padding:12px 4px;"><div class="icon-wrap" style="width:32px;height:32px;font-size:15px;margin-bottom:6px;">📦</div><p style="font-size:10px;">Delivery</p></div>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--line); padding-top:22px;">
+          <p class="text-xs font-semibold text-rust" style="text-transform:uppercase; letter-spacing:0.06em; margin-bottom:14px;">Identity verification</p>
+          <div>
+            <label class="field-label">Aadhaar number</label>
+            <input class="input-field" placeholder="XXXX XXXX XXXX" />
+          </div>
+          <div style="margin-top:14px;">
+            <label class="field-label">Mobile number linked to Aadhaar</label>
+            <input class="input-field" placeholder="9876543210" />
+          </div>
+          <div class="verify-box mt-3">
+            <span class="check">✓</span>
+            <p class="text-xs text-body">
+              Aadhaar-linked mobile number matches your registered number.
+              A listing never goes live without this cross-check passing.
+            </p>
+          </div>
+          <p class="text-xs text-muted-2 mt-2">
+            Aadhaar is stored encrypted and never shown to customers — they only see a "Verified" badge.
+          </p>
+        </div>
+
+        <div>
+          <label class="field-label">Office / work address</label>
+          <textarea class="input-field" rows="2" placeholder="Shop No. 4, Market Street, Trichy"></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-block" style="justify-content:center;">Submit for verification</button>
+        <p class="text-center text-xs text-muted-2">Admin review usually takes under 24 hours.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CUSTOMER DASHBOARD ============ -->
+  <div id="customer" class="tab-panel container-md" style="padding-top:52px; padding-bottom:52px;">
+    <div class="flex-between mb-8">
+      <div>
+        <h1 style="font-size:28px;">Your jobs</h1>
+        <p class="text-muted text-sm mt-1">3 active · 1 completed</p>
+      </div>
+      <span class="btn btn-primary btn-small">Post a job</span>
+    </div>
+    <div class="space-y-4">
+      <div class="card hoverable">
+        <div class="flex-between">
+          <div>
+            <span class="pill">🔧 Plumbing</span>
+            <p class="mt-3" style="color:var(--ink);">Kitchen tap leaking since morning, water pooling under the sink</p>
+            <p class="text-xs text-muted mt-2">📍 42 Anna Nagar, Chennai</p>
+          </div>
+          <span class="stamp" style="background:var(--pending-soft); color:var(--pending); white-space:nowrap;">Bids coming in</span>
+        </div>
+      </div>
+      <div class="card hoverable">
+        <div class="flex-between">
+          <div>
+            <span class="pill">💻 Web Dev</span>
+            <p class="mt-3" style="color:var(--ink);">Landing page button not working on mobile, needs a quick fix</p>
+            <p class="text-xs text-muted mt-2">📍 Remote</p>
+          </div>
+          <span class="stamp stamp-verified" style="white-space:nowrap;">Worker assigned</span>
+        </div>
+      </div>
+      <div class="card hoverable">
+        <div class="flex-between">
+          <div>
+            <span class="pill">📦 Parcel Delivery</span>
+            <p class="mt-3" style="color:var(--ink);">Documents to be delivered same-day across town</p>
+            <p class="text-xs text-muted mt-2">📍 7 Gandhi Street, Chennai</p>
+          </div>
+          <span class="stamp" style="background:var(--paper); color:var(--ink-3); white-space:nowrap;">Completed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ QUOTE SHEET ============ -->
+  <div id="quotes" class="tab-panel container-md" style="padding-top:52px; padding-bottom:52px;">
+    <p class="text-xs font-semibold text-rust" style="text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">Job #a1b2c3d4</p>
+    <h1 style="font-size:28px; margin-bottom:10px;">Quote sheet</h1>
+    <p class="text-muted text-sm mb-6">Pick a bid to unlock the worker's contact details.</p>
+
+    <div class="flex flex-wrap gap-2 mb-8">
+      <span class="tab-btn active" style="border-radius:6px;" onclick="sortBids('price_low', this)">Price: Low to High</span>
+      <span class="tab-btn" style="border-radius:6px;" onclick="sortBids('price_high', this)">Price: High to Low</span>
+      <span class="tab-btn" style="border-radius:6px;" onclick="sortBids('exp_high', this)">Experience: High to Low</span>
+      <span class="tab-btn" style="border-radius:6px;" onclick="sortBids('exp_low', this)">Experience: Low to High</span>
+    </div>
+    <div class="space-y-4" id="bid-list">
+      <div class="card hoverable flex-between" data-price="450" data-exp="6">
+        <div class="flex gap-3 items-center">
+          <div class="avatar">SK</div>
+          <div>
+            <div class="flex gap-2 items-center">
+              <span class="font-semibold" style="font-size:16px;">Suresh Kumar</span>
+              <span class="stamp stamp-verified">Verified</span>
+            </div>
+            <p class="text-sm text-muted mt-1">6 yrs experience · 4.8★ (32 reviews)</p>
+            <p class="text-xs text-muted-2 mt-1">ETA: 25 min</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="amount">₹450</p>
+          <span class="btn btn-primary btn-xs mt-2" style="display:inline-flex;">Accept bid</span>
+        </div>
+      </div>
+      <div class="card hoverable flex-between" data-price="500" data-exp="3">
+        <div class="flex gap-3 items-center">
+          <div class="avatar">RS</div>
+          <div>
+            <div class="flex gap-2 items-center">
+              <span class="font-semibold" style="font-size:16px;">Ravi Shankar</span>
+              <span class="stamp stamp-verified">Verified</span>
+            </div>
+            <p class="text-sm text-muted mt-1">3 yrs experience · 4.5★ (14 reviews)</p>
+            <p class="text-xs text-muted-2 mt-1">ETA: 40 min</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="amount">₹500</p>
+          <span class="btn btn-primary btn-xs mt-2" style="display:inline-flex;">Accept bid</span>
+        </div>
+      </div>
+      <div class="card hoverable flex-between" data-price="380" data-exp="9">
+        <div class="flex gap-3 items-center">
+          <div class="avatar">VM</div>
+          <div>
+            <div class="flex gap-2 items-center">
+              <span class="font-semibold" style="font-size:16px;">Velu Murugan</span>
+              <span class="stamp stamp-verified">Verified</span>
+            </div>
+            <p class="text-sm text-muted mt-1">9 yrs experience · 4.9★ (61 reviews)</p>
+            <p class="text-xs text-muted-2 mt-1">ETA: 55 min</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="amount">₹380</p>
+          <span class="btn btn-primary btn-xs mt-2" style="display:inline-flex;">Accept bid</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ WORKER BOARD ============ -->
+  <div id="worker" class="tab-panel container-md" style="padding-top:52px; padding-bottom:52px;">
+    <div class="flex-between mb-6">
+      <h1 style="font-size:28px;">Job board</h1>
+      <span class="stamp stamp-verified">Verified</span>
+    </div>
+    <div class="space-y-4">
+      <div class="card">
+        <span class="pill">🔧 Plumbing</span>
+        <p class="mt-3" style="color:var(--ink);">Kitchen tap leaking since morning, water pooling under the sink</p>
+        <p class="text-xs text-muted mt-2">📍 42 Anna Nagar, Chennai</p>
+        <div class="flex gap-2 mt-4 items-end">
+          <div class="flex-1">
+            <label class="field-label">Your price (₹)</label>
+            <input class="input-field" placeholder="450" />
+          </div>
+          <div class="flex-1">
+            <label class="field-label">ETA (min)</label>
+            <input class="input-field" placeholder="25" />
+          </div>
+          <span class="btn btn-primary btn-small" style="white-space:nowrap;">Place bid</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN ============ -->
+  <div id="admin" class="tab-panel container" style="padding-top:52px; padding-bottom:52px;">
+    <h1 style="font-size:28px; margin-bottom:36px;">Admin overview</h1>
+    <div class="grid grid-3" style="margin-bottom:44px;">
+      <div class="card stat-card"><p>Customers</p><p class="text-steel">128</p></div>
+      <div class="card stat-card"><p>Workers</p><p class="text-steel">54</p></div>
+      <div class="card stat-card"><p>Pending KYC</p><p class="text-pending">7</p></div>
+      <div class="card stat-card"><p>Open jobs</p><p class="text-steel">19</p></div>
+      <div class="card stat-card"><p>Completed jobs</p><p class="text-steel">203</p></div>
+      <div class="card stat-card"><p>Commission earned</p><p class="text-verified">₹18,450</p></div>
+    </div>
+    <h2 style="font-size:19px; margin-bottom:16px;">KYC review queue</h2>
+    <div class="card flex-between">
+      <div class="flex gap-3 items-center">
+        <div class="avatar">MP</div>
+        <div>
+          <p class="font-semibold" style="font-size:16px;">Manoj Pillai</p>
+          <p class="text-sm text-muted">9876543210</p>
+          <p class="text-xs text-muted mt-1">Plumbing · 4 yrs experience</p>
+          <p class="text-xs text-verified mt-1 font-semibold">✓ Aadhaar mobile match confirmed</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <span class="btn btn-primary btn-xs">Approve</span>
+        <span class="btn btn-outline-danger">Reject</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(id, btn) {
+      document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+    document.querySelectorAll('#register .category-tile').forEach(function(card) {
+      card.addEventListener('click', function() {
+        card.parentElement.querySelectorAll('.category-tile').forEach(function(c) { c.classList.remove('selected'); });
+        card.classList.add('selected');
+      });
+    });
+    function sortBids(key, btn) {
+      var list = document.getElementById('bid-list');
+      var cards = Array.prototype.slice.call(list.children);
+      cards.sort(function(a, b) {
+        var priceA = Number(a.dataset.price), priceB = Number(b.dataset.price);
+        var expA = Number(a.dataset.exp), expB = Number(b.dataset.exp);
+        if (key === 'price_low') return priceA - priceB;
+        if (key === 'price_high') return priceB - priceA;
+        if (key === 'exp_high') return expB - expA;
+        if (key === 'exp_low') return expA - expB;
+        return 0;
+      });
+      cards.forEach(function(c) { list.appendChild(c); });
+      btn.parentElement.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
